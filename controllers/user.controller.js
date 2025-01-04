@@ -1,19 +1,50 @@
-const userSerivce = require("../services/user.service");
-import userModel from "../models/user.model";
-import { ExpressValidator } from "express-validator";
-import { validationResult } from "express-validator";
+import userModel from "../models/user.model.js";
 
-async function createUser(req, res) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-  }
+export const register = async (req, res) => {
+  const { username, email, password } = req.body;
   try {
-   const user = userSerivce.createUser(req.body);
-   const token = await user.genetateAuthToken();
-    res.status(201).send({user, token});
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User Already Exists" });
+    }
+    const hashpassword = await userModel.hashPassword(password);
+    const user = new userModel({
+      username: username,
+      email: email,
+      password: hashpassword,
+    });
+    const token = await user.generateAuthToken();
+    await user.save();
+    res.status(201).json({ user, token });
   } catch (error) {
-    res.status(400).send(error.message);
+    console.error(error);
+    res.status(500).json({
+      message:
+        "An error occurred while processing your request. Please try again later.",
+    });
   }
+};
 
-}
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await userModel.find({ email });
+    if (!user) {
+      return res.status(500).json({ message: "User not found" });
+    }
+    const isValid = await user.isValidPassword(password);
+    if (!isValid) {
+      return res
+        .status(401)
+        .json({ message: "Invalid Password or Credentials" });
+    }
+    const token = await user.generateAuthToken();
+    return res.status(200).json({user, token})
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message:
+        "An error occurred while processing your request. Please try again later.",
+    });
+  }
+};

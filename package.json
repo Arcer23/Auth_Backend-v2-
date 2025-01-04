@@ -5,15 +5,27 @@
   "description": "Authentication System",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
-  "author": "Pranish Kadel",
+  "author": {
+    "name": "Pranish Kadel",
+    "email": "pranish@example.com",
+    "url": "https://example.com"
+  },
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.3",
     "morgan": "^1.10.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.9"
   }
 }
