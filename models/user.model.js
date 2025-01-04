@@ -24,14 +24,18 @@ const userSchema = new mongoose.Schema({
     minLength: [6, "Password must be at least 6 characters long"],
     select: false,
   },
+  role:{
+    type: String,
+    default: "user",
+    enum: ["user", "admin"],
+  }
 });
 userSchema.statics.hashPassword = async function (password) {
   return await bcrypt.hash(password, 10);
 };
 
 userSchema.methods.isValidPassword = async function (password) {
-  const user = await this.constructor.findById(this._id).select("+password");
-  return await bcrypt.compare(password, user.password);
+  return await bcrypt.compare(password, this.password);
 };
 
 userSchema.methods.generateAuthToken = async function () {

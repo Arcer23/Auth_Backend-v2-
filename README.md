@@ -4,8 +4,6 @@ Authentication System
 
 Technologies Used
 
-Specify the technologies and tools used in the project:
-
     Backend: Node.js, Express.js
     Database: MongoDB, Mongoose
     Authentication: Passport.js, JWT
@@ -15,8 +13,8 @@ Specify the technologies and tools used in the project:
 
 Getting Started
 
-Provide steps to set up the project locally.
-Prerequisites
+
+    Prerequisites
 
     Node.js installed
     MongoDB installed and running

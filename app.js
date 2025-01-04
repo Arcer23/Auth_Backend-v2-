@@ -7,6 +7,12 @@ import bodyParser from "body-parser";
 
 connectDB();
 
+const isAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Access Denied , Admins Only" });
+  }
+  next();
+};
 app.use(morgan("dev"));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true })); 
